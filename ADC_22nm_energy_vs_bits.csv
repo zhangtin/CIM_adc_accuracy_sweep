@@ -1,0 +1,15 @@
+bits,enob_assumed,sndr_ideal_dB,E_best_J,best_limit,E_typical_J,typical_limit,E_conservative_J,conservative_limit,best_FOMW_fJ,best_FOMS_dB,typical_FOMW_fJ,typical_FOMS_dB,conservative_FOMW_fJ,conservative_FOMS_dB
+1,1,7.78,3.556e-15,Walden(FOMW),7.88e-15,Walden(FOMW),3.902e-14,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+2,2,13.8,7.112e-15,Walden(FOMW),1.576e-14,Walden(FOMW),7.804e-14,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+3,3,19.82,1.422e-14,Walden(FOMW),3.152e-14,Walden(FOMW),1.561e-13,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+4,4,25.84,2.845e-14,Walden(FOMW),6.304e-14,Walden(FOMW),3.122e-13,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+5,5,31.86,5.69e-14,Walden(FOMW),1.261e-13,Walden(FOMW),6.243e-13,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+6,6,37.88,1.138e-13,Walden(FOMW),2.522e-13,Walden(FOMW),1.249e-12,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+7,7,43.9,2.276e-13,Walden(FOMW),5.043e-13,Walden(FOMW),2.497e-12,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+8,8,49.92,4.552e-13,Walden(FOMW),1.009e-12,Walden(FOMW),4.995e-12,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+9,9,55.94,9.103e-13,Walden(FOMW),2.017e-12,Walden(FOMW),9.989e-12,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+10,10,61.96,1.821e-12,Walden(FOMW),4.035e-12,Walden(FOMW),1.998e-11,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+11,11,67.98,3.641e-12,Walden(FOMW),8.069e-12,Walden(FOMW),3.996e-11,Walden(FOMW),1.778,182.3,3.94,176.3,19.51,171.8
+12,12,74,7.362e-12,thermal(FOMS),2.917e-11,thermal(FOMS),8.355e-11,thermal(FOMS),1.778,182.3,3.94,176.3,19.51,171.8
+13,13,80.02,2.944e-11,thermal(FOMS),1.167e-10,thermal(FOMS),3.342e-10,thermal(FOMS),1.778,182.3,3.94,176.3,19.51,171.8
+14,14,86.04,1.178e-10,thermal(FOMS),4.666e-10,thermal(FOMS),1.337e-09,thermal(FOMS),1.778,182.3,3.94,176.3,19.51,171.8
