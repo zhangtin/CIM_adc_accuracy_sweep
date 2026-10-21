@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-Regression tests: the package must reproduce the outputs of the original scripts bit for bit.
+Regression tests against the original scripts, with portable floating-point summary comparisons.
 
 Run:  python -m unittest tests.test_regression -v      (from the repository root)
 """
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,7 +36,24 @@ class RegressionTest(unittest.TestCase):
         a, b = pd.read_csv(golden), pd.read_csv(new)
         self.assertEqual(list(a.columns), list(b.columns), f"column mismatch in {golden.name}")
         self.assertEqual(a.shape, b.shape, f"shape mismatch in {golden.name}")
-        pd.testing.assert_frame_equal(a, b, check_exact=True, obj=str(golden.relative_to(ROOT)))
+        # Trial CSVs, under-utilization outputs and IR calibration stay exact.
+        # Full-precision sweep aggregates vary in their last digits across BLAS,
+        # CPU/compiler and pandas versions even when the serialized trials match.
+        aggregate = golden.parent.name in {"sweep_ir_noise", "sweep_sampled"} and golden.name in {
+            "summary.csv", "knee.csv"}
+        if not aggregate or os.environ.get("CIM_SIM_STRICT_REGRESSION") == "1":
+            pd.testing.assert_frame_equal(a, b, check_exact=True, obj=str(golden))
+            return
+        for col in a.columns:
+            if pd.api.types.is_float_dtype(a[col]):
+                finite = np.abs(a[col].to_numpy()[np.isfinite(a[col].to_numpy())])
+                scale = float(finite.max()) if finite.size else 0.0
+                # Scale the absolute allowance per column, so femtojoule energy
+                # values cannot disappear under a unit-independent tolerance.
+                pd.testing.assert_series_equal(a[col], b[col], check_exact=False,
+                                               rtol=1e-10, atol=1e-12 * scale, obj=f"{golden}:{col}")
+            else:
+                pd.testing.assert_series_equal(a[col], b[col], check_exact=True, obj=f"{golden}:{col}")
 
     def _run_sweep(self, golden_dir: str, **kw):
         with tempfile.TemporaryDirectory() as tmp:

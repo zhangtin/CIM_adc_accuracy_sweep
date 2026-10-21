@@ -21,7 +21,8 @@ Two levels of abstraction are supported:
 The package is a modular refactoring of `cim_adc_mc.py` (v3) and `cim_adc_underutil.py`. Physical
 models, random-stream conventions and output formats are unchanged: with identical command-line
 arguments, the package reproduces `raw_trials.csv.gz`, `summary.csv`, `knee.csv` and
-`ir_calibration.csv` of the original scripts bit for bit (checked by `tests/test_regression.py`).
+`ir_calibration.csv` of the original scripts (checked by `tests/test_regression.py`;
+see [comparison tolerances](tests/golden/README.md) for floating-point summary portability).
 
 **Scope.** Only the compute side is modeled. Weight programming is abstracted as a conductance
 assignment with a static, per-device error; write pulses, verify loops and device switching
@@ -573,7 +574,7 @@ The tests use the standard-library `unittest` runner (pytest also collects them)
 ```bash
 python -m unittest discover -s tests -v       # all tests, about 4 s
 python -m unittest tests.test_tiling -v       # tiling only
-python -m unittest tests.test_regression -v   # bit-exact regression + selfcheck + main.py output
+python -m unittest tests.test_regression -v   # golden regression + selfcheck + main.py output
 ```
 
 ## Programmatic use
