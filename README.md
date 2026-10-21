@@ -22,7 +22,7 @@ The package is a modular refactoring of `cim_adc_mc.py` (v3) and `cim_adc_underu
 models, random-stream conventions and output formats are unchanged: with identical command-line
 arguments, the package reproduces `raw_trials.csv.gz`, `summary.csv`, `knee.csv` and
 `ir_calibration.csv` of the original scripts (checked by `tests/test_regression.py`;
-see [comparison tolerances](tests/golden/README.md) for floating-point summary portability).
+see [comparison tolerances](tests/golden/README.md) for full-precision floating-point portability).
 
 **Scope.** Only the compute side is modeled. Weight programming is abstracted as a conductance
 assignment with a static, per-device error; write pulses, verify loops and device switching
@@ -552,7 +552,7 @@ cim_sim/
   plotting/              Figures
 tests/
   test_tiling.py         Tiling: ideal correctness, physical consistency, edge cases, random streams
-  test_regression.py     Bit-exact regression against the original scripts (tests/golden/)
+  test_regression.py     Golden regression against the original scripts (tests/golden/)
 docs/                    Pre-rendered architecture diagrams
 ```
 
