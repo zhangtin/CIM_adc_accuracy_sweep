@@ -1,0 +1,47 @@
+name: V4 validation
+
+on:
+  pull_request:
+    paths:
+      - 'V4/**'
+      - '.github/workflows/v4.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'V4/**'
+      - '.github/workflows/v4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.12']
+    env:
+      OMP_NUM_THREADS: '2'
+      MPLBACKEND: Agg
+      PYTHONUTF8: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install simulation dependencies
+        run: python -m pip install numpy scipy pandas matplotlib
+      - name: Check relocated entry points and data paths from the repository root
+        run: python -m unittest discover -s V4/tests -v
+      - name: Run existing numerical self-check including C/OpenMP kernel
+        working-directory: V4
+        run: python -m cim_sim.selfcheck
+      - name: Run default IR-enabled walkthrough from the repository root
+        run: python V4/main.py
+      - name: Smoke-test both sweeps with IR drop and read noise
+        working-directory: V4
+        run: |
+          python cim_adc_mc.py --sizes 8 --mem-bits 4 --mem-sigma 0.02 --adc-bits 4 8 --n-mc 6 --r-wire 1 --no-plots --out "$RUNNER_TEMP/v4-sweep"
+          python "All-in-one script/cim_adc_mc.py" --sizes 8 --mem-bits 4 --mem-sigma 0.02 --adc-bits 4 8 --n-mc 6 --r-wire 1 --no-plots --out "$RUNNER_TEMP/v4-legacy"

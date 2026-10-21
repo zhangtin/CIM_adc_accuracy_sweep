@@ -19,6 +19,17 @@ dynamics are out of scope.
 
 ## Quick Start
 
+The existing implementation and its data now live in `V4/`. From the repository
+root, enter this directory before following the examples below:
+
+```bash
+cd V4
+```
+
+All paths and commands in this document are relative to `V4/` unless stated otherwise.
+The package imports are still `cim_sim`; no installation or package rename is required.
+For programmatic use, run Python from `V4/`, or add its absolute path to `PYTHONPATH`.
+
 ### 1. Run the walkthrough
 
 Requirements: Python ≥ 3.10, NumPy, SciPy, pandas, and `gcc` with OpenMP (the IR-drop kernel is
@@ -273,6 +284,9 @@ Static and dynamic errors behave differently and are deliberately kept apart:
 
 ## Directory layout
 
+Paths below are relative to `V4/`. `All-in-one script/` retains the legacy
+standalone implementation and its original data; `docs/` retains the diagrams.
+
 ```
 main.py                  End-to-end 16x16 walkthrough (start here)
 cim_adc_mc.py            Main sweep entry point (same CLI as the original script)
@@ -318,6 +332,23 @@ python plot_underutil.py res_b4
 python -m cim_sim.selfcheck
 ```
 
+The default ADC energy table is resolved relative to the implementation, so these
+commands also work **from the repository root**:
+
+```bash
+python V4/main.py
+python V4/cim_adc_mc.py --out V4/results
+python V4/cim_adc_underutil.py --mem-bits 4 --out V4/res_b4
+python V4/plot_underutil.py V4/res_b4
+python "V4/All-in-one script/cim_adc_mc.py" --out V4/results_legacy
+```
+
+Explicit `--energy-csv` paths, `--out` directories and plot input directories are
+still relative to the current working directory (or may be absolute). For example,
+from the repository root use `--energy-csv V4/ADC_22nm_energy_vs_bits.csv`.
+The default energy path saved in a new `config.json` is absolute; when transferring
+that configuration to another checkout, update it to the local table path.
+
 ## Programmatic use
 
 Low-level functions take explicit scalar arguments (units are given in each docstring). Mid-level
@@ -346,6 +377,20 @@ raw, summary = run_sweep(cfg)
 | Remove digital gain correction (`*_cal`, `*_chip`) | `readout.apply_column_gain` is called only in `experiments/sweep.py::simulate_point`; delete those two blocks |
 
 ## Reproducibility and validation
+
+From `V4/`, run the path regression tests and the existing numerical self-check:
+
+```bash
+python -m unittest discover -s tests -v
+python -m cim_sim.selfcheck
+```
+
+The path tests also run from the repository root with
+`python -m unittest discover -s V4/tests -v`. They cover launching from the root,
+`V4/` and an unrelated working directory, both sweep implementations, explicit
+energy-table overrides, result re-summarization and under-utilization plotting.
+The GitHub Actions workflow stays at `.github/workflows/v4.yml` in the repository
+root and runs these checks plus the C/OpenMP self-check and IR-enabled smoke runs.
 
 - All randomness flows through `rng.py`. Each sweep point `(b, σ, N)` owns independent streams for
   array programming, inputs, calibration arrays and read noise, so the same point sees the same

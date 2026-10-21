@@ -119,7 +119,8 @@ class Config:
     cal_exact_max: int = 256
 
     # ---- 其他（同 v2）----
-    energy_csv: str = "ADC_22nm_energy_vs_bits.csv"
+    # Resolve bundled data independently of the caller's working directory.
+    energy_csv: str = str(Path(__file__).resolve().parent / "ADC_22nm_energy_vs_bits.csv")
     seed: int = 20260929
     out_dir: str = "results"
     chunk_elems: int = 2 ** 24
