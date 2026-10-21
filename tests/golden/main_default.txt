@@ -1,0 +1,44 @@
+
+=== Step 1  Configuration ===================================================
+  array 16x16, 64 input vectors, weight/DAC 4 bit, write sigma 2.0%, ADC 8 bit (stat full scale), input 'uniform'
+  G window [1.0, 100.0] uS, v_read 0.2 V, t_read 10.0 ns, IR drop on, read noise on, seed 20260929
+
+=== Steps 2-5  Weights -> LUT -> target conductance -> programmed conductance 
+  W (digital weights)        shape=(16, 16)   [-]   min=         0  mean=     7.578  max=        15
+  lut                        shape=(16,)      [uS]  min=         1  mean=      50.5  max=       100
+  G_target                   shape=(16, 16)   [uS]  min=         1  mean=     51.02  max=       100
+  G (after write noise)      shape=(16, 16)   [uS]  min=    0.9742  mean=     50.91  max=       102
+  realized write error: mean -0.090%, std 1.983% (target sigma 2.0%)
+
+=== Step 6  Inputs -> DAC ===================================================
+  X (digital inputs)         shape=(64, 16)   [-]   min=         0  mean=     7.843  max=        15
+  V (read voltages)          shape=(64, 16)   [mV]  min=         0  mean=     104.6  max=       200
+
+=== Step 7  Crossbar MAC (IR drop + read noise) =============================
+  wire resistance per segment r_wire = 0.7607 Ohm (nodal solver converged in 3 iterations)
+  I_prog (ideal wires)       shape=(64, 16)   [uA]  min=     36.83  mean=     85.06  max=     163.7
+  I_ir (with IR drop)        shape=(64, 16)   [uA]  min=     36.64  mean=     84.41  max=       162
+  noise_sd (per read)        shape=(64, 16)   [nA]  min=     141.9  mean=     288.3  max=     482.9
+  I_read (ADC input)         shape=(64, 16)   [uA]  min=     36.54  mean=     84.41  max=     161.5
+  E_read (array energy)      shape=(64,)      [fJ]  min=      1046  mean=      1900  max=      2886
+  mean IR-drop attenuation 0.766%; read-noise rms / mean signal 0.349%
+
+=== Steps 8-9  ADC and digital readout ======================================
+  ADC window [5.459, 155.080] uA, LSB 586.751 nA, clipped low 0.00%, high 0.20%
+  I_q (quantized)            shape=(64, 16)   [uA]  min=     36.56  mean=     84.41  max=     155.1
+  Y_ideal = X @ W            shape=(64, 16)   [-]   min=       403  mean=     949.6  max=      1846
+  Y_adc (reconstructed)      shape=(64, 16)   [-]   min=     399.4  mean=     940.2  max=      1738
+  readout inversion check: max |Y_target - Y_ideal| = 6.82e-13
+
+=== Step 10  Error metrics (MAC units; full scale = N*(2^b-1)^2 = 3600) =====
+  rms programming error (static)           5.6293
+  rms IR drop increment                    8.0260
+  rms read noise increment (dynamic)       3.2479
+  rms all analog errors                   12.1689
+  rms ADC quantization increment           2.4237
+  rms total, ADC output                   12.6724
+  pooled RMSE 13.1577  (3.655e-03 of full scale), max |error| 108.576
+  pooled SNR 23.75 dB -> signal-referred effective bits 3.65
+  full-scale-referred effective bits 6.30
+  outputs exactly recovered after rounding: 3.1%
+  array read energy 1900.43 fJ per read, 7.424 fJ per MAC (ADC energy not included)
