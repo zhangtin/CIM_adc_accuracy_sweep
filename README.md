@@ -1,5 +1,9 @@
 # cim_sim — Compute-Side Simulation of Memristor CIM Crossbars and ADC Resolution
 
+**Current version: V5** (repository root). The previous version is preserved in
+[V4/](V4/README.md). Run the commands below from the repository root; to run the
+archived version, first change into `V4/`.
+
 `cim_sim` simulates the compute side of an analog compute-in-memory (CIM) macro: a memristor
 crossbar performs the multiply-accumulate (MAC) in the analog domain, and per-column ADCs bring the
 result back to the digital domain. The framework quantifies how programming error, IR drop, read
