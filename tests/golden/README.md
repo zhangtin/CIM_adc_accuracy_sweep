@@ -4,9 +4,9 @@ Generated with the ORIGINAL, pre-refactoring scripts (`scripts/cim_adc_mc.py` v3
 `scripts/cim_adc_underutil.py` in the project) and with `main.py` of release 4.0.0. The refactored
 package is checked against these files by `tests/test_regression.py`.
 
-Serialized trials, under-utilization tables, IR calibration and walkthrough stdout
-are compared exactly. Full-precision sweep `summary.csv` and `knee.csv` float
-columns use `rtol=1e-10` and `atol=1e-12 * max(abs(reference_column))` to accommodate
+Serialized trials, under-utilization tables and walkthrough stdout are compared
+exactly. Full-precision sweep `summary.csv`, `knee.csv` and `ir_calibration.csv`
+float columns use `rtol=1e-10` and `atol=1e-12 * max(abs(reference_column))` to accommodate
 roundoff across CPU/compiler, BLAS and pandas versions. Non-floating columns,
 column order, shapes, dtypes and NaN positions still have to match. Scaling each
 column separately preserves strict checks on tiny energy/current quantities.

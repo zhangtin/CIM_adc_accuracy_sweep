@@ -30,7 +30,9 @@ class GoldenComparisonTest(unittest.TestCase):
         return df
 
     def test_summary_accepts_roundoff(self):
-        self.compare(self.roundoff)
+        for name in ("summary.csv", "knee.csv", "ir_calibration.csv"):
+            with self.subTest(file=name):
+                self.compare(self.roundoff, name=name)
 
     def test_strict_mode_and_trial_files_reject_roundoff(self):
         with self.assertRaises(AssertionError):

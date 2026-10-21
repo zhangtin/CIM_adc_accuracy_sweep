@@ -36,12 +36,12 @@ class RegressionTest(unittest.TestCase):
         a, b = pd.read_csv(golden), pd.read_csv(new)
         self.assertEqual(list(a.columns), list(b.columns), f"column mismatch in {golden.name}")
         self.assertEqual(a.shape, b.shape, f"shape mismatch in {golden.name}")
-        # Trial CSVs, under-utilization outputs and IR calibration stay exact.
-        # Full-precision sweep aggregates vary in their last digits across BLAS,
+        # Trial CSVs and under-utilization outputs stay exact.
+        # Full-precision sweep aggregates/calibration vary in their last digits across BLAS,
         # CPU/compiler and pandas versions even when the serialized trials match.
-        aggregate = golden.parent.name in {"sweep_ir_noise", "sweep_sampled"} and golden.name in {
-            "summary.csv", "knee.csv"}
-        if not aggregate or os.environ.get("CIM_SIM_STRICT_REGRESSION") == "1":
+        full_precision = golden.parent.name in {"sweep_ir_noise", "sweep_sampled"} and golden.name in {
+            "summary.csv", "knee.csv", "ir_calibration.csv"}
+        if not full_precision or os.environ.get("CIM_SIM_STRICT_REGRESSION") == "1":
             pd.testing.assert_frame_equal(a, b, check_exact=True, obj=str(golden))
             return
         for col in a.columns:
